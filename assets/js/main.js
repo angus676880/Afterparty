@@ -1,0 +1,84 @@
+/**
+ * Google 表單串接設定
+ *
+ * 替換步驟：
+ * 1. 開啟你的 Google 表單 → 點右上角「傳送」→ 複製連結
+ * 2. 把連結中的 /viewform 改成 /formResponse，貼到 FORM_ACTION
+ * 3. 在 Chrome 開啟空白表單 → 開發者工具 → Network tab
+ *    → 填一筆測試資料送出 → 找到 formResponse 的 POST 請求
+ *    → 在 Payload 中找到每個欄位對應的 entry.xxxxxxxxx
+ *    → 把 HTML 裡 name="entry.xxxxxxxxx" 的佔位符全部替換掉
+ *
+ * 範例：
+ * FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSe實際表單ID/formResponse'
+ */
+const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLScO5mobWJaKIFmA3gjdz20hviLtJXRpnWvfkpOuOW4qMyw5hg/formResponse';
+
+const form = document.getElementById('rsvp-form');
+const successPanel = document.getElementById('rsvp-success');
+const iframe = document.getElementById('hidden-iframe');
+const submitBtn = form.querySelector('.btn-submit');
+
+/** 驗證單一欄位，回傳錯誤訊息；無誤回傳空字串 */
+function validateField(input) {
+  if (input.required && !input.value.trim()) return '此欄位為必填';
+  if (input.type === 'email' && input.value && !input.validity.valid) return '請輸入有效的電子郵件';
+  return '';
+}
+
+/** 顯示或清除欄位錯誤訊息 */
+function setFieldError(input, message) {
+  const errorEl = input.closest('.form-group').querySelector('.field-error');
+  if (!errorEl) return;
+  errorEl.textContent = message;
+  input.setAttribute('aria-invalid', message ? 'true' : 'false');
+}
+
+/** 送出前做一次完整驗證，回傳是否全部通過 */
+function validateAll() {
+  const fields = form.querySelectorAll('input, select, textarea');
+  let valid = true;
+  fields.forEach(field => {
+    const msg = validateField(field);
+    setFieldError(field, msg);
+    if (msg) valid = false;
+  });
+  return valid;
+}
+
+/* 即時驗證（blur 時觸發） */
+form.addEventListener('focusout', e => {
+  if (!e.target.matches('input, select, textarea')) return;
+  setFieldError(e.target, validateField(e.target));
+});
+
+/* 送出表單 */
+form.addEventListener('submit', e => {
+  e.preventDefault();
+
+  if (!validateAll()) return;
+
+  /* 將 form action 導向 Google 表單，並用隱藏 iframe 攔截跳轉 */
+  form.action = FORM_ACTION;
+  form.method = 'POST';
+  form.target = 'hidden-iframe';
+
+  /* 顯示載入狀態 */
+  submitBtn.disabled = true;
+  submitBtn.classList.add('is-loading');
+
+  /* 等 iframe 載入完成即視為送出成功
+     （Google 表單不回傳 JSON，無法偵測真正的成功/失敗） */
+  iframe.addEventListener('load', handleSuccess, { once: true });
+
+  form.submit();
+});
+
+function handleSuccess() {
+  submitBtn.disabled = false;
+  submitBtn.classList.remove('is-loading');
+
+  form.hidden = true;
+  successPanel.hidden = false;
+  successPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
