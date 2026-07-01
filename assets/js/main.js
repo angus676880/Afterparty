@@ -14,10 +14,23 @@
  */
 const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLScO5mobWJaKIFmA3gjdz20hviLtJXRpnWvfkpOuOW4qMyw5hg/formResponse';
 
+const DEADLINE = new Date('2026-08-16T00:00:00+08:00');
+
 const form = document.getElementById('rsvp-form');
 const successPanel = document.getElementById('rsvp-success');
 const iframe = document.getElementById('hidden-iframe');
 const submitBtn = form.querySelector('.btn-submit');
+
+/* 截止後鎖定表單 */
+if (new Date() >= DEADLINE) {
+  form.querySelectorAll('input, select, textarea, button').forEach(el => {
+    el.disabled = true;
+  });
+  const notice = document.createElement('p');
+  notice.className = 'form-closed-notice';
+  notice.textContent = '報名已於 8/15 截止，感謝所有參與者！';
+  form.insertAdjacentElement('afterend', notice);
+}
 
 /** 驗證單一欄位，回傳錯誤訊息；無誤回傳空字串 */
 function validateField(input) {
