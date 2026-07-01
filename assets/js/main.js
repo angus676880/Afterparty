@@ -78,7 +78,68 @@ function handleSuccess() {
   submitBtn.disabled = false;
   submitBtn.classList.remove('is-loading');
 
-  form.hidden = true;
-  successPanel.hidden = false;
-  successPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  burstParticles(submitBtn);
+  showSuccessPopup();
+}
+
+function showSuccessPopup() {
+  const overlay = document.createElement('div');
+  overlay.className = 'success-overlay';
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('role', 'dialog');
+  overlay.innerHTML = `
+    <div class="success-popup">
+      <span class="success-popup__icon" aria-hidden="true">🎉</span>
+      <h3 id="popup-title">報名成功！</h3>
+      <p>我們收到你的報名了，<br>期待在派對上見到你！</p>
+      <button class="success-popup__close" autofocus>收到！</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  function close() {
+    overlay.remove();
+    form.hidden = true;
+    successPanel.hidden = false;
+  }
+
+  overlay.querySelector('.success-popup__close').addEventListener('click', close);
+  overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); }, { once: true });
+}
+
+function burstParticles(originEl) {
+  const rect = originEl.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const colors = ['#ffd600', '#e040fb', '#40c4ff', '#ff4081', '#69f0ae', '#ff6f00'];
+
+  for (let i = 0; i < 36; i++) {
+    const p = document.createElement('div');
+    const angle = (i / 36) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+    const dist = 100 + Math.random() * 200;
+    const size = 6 + Math.random() * 10;
+
+    Object.assign(p.style, {
+      position: 'fixed',
+      left: `${cx}px`,
+      top: `${cy}px`,
+      width: `${size}px`,
+      height: `${size}px`,
+      borderRadius: Math.random() > 0.4 ? '50%' : '3px',
+      background: colors[Math.floor(Math.random() * colors.length)],
+      pointerEvents: 'none',
+      zIndex: '2000',
+    });
+    document.body.appendChild(p);
+
+    p.animate([
+      { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
+      { transform: `translate(calc(-50% + ${Math.cos(angle) * dist}px), calc(-50% + ${Math.sin(angle) * dist + 60}px)) scale(0)`, opacity: 0 },
+    ], {
+      duration: 550 + Math.random() * 450,
+      easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+      fill: 'forwards',
+    }).onfinish = () => p.remove();
+  }
 }
