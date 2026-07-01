@@ -14,10 +14,23 @@
  */
 const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLScO5mobWJaKIFmA3gjdz20hviLtJXRpnWvfkpOuOW4qMyw5hg/formResponse';
 
+const DEADLINE = new Date('2026-08-16T00:00:00+08:00');
+
 const form = document.getElementById('rsvp-form');
 const successPanel = document.getElementById('rsvp-success');
 const iframe = document.getElementById('hidden-iframe');
 const submitBtn = form.querySelector('.btn-submit');
+
+/* 截止後鎖定表單 */
+if (new Date() >= DEADLINE) {
+  form.querySelectorAll('input, select, textarea, button').forEach(el => {
+    el.disabled = true;
+  });
+  const notice = document.createElement('p');
+  notice.className = 'form-closed-notice';
+  notice.textContent = '報名已於 8/15 截止，感謝所有參與者！';
+  form.insertAdjacentElement('afterend', notice);
+}
 
 /** 驗證單一欄位，回傳錯誤訊息；無誤回傳空字串 */
 function validateField(input) {
@@ -28,7 +41,9 @@ function validateField(input) {
 
 /** 顯示或清除欄位錯誤訊息 */
 function setFieldError(input, message) {
-  const errorEl = input.closest('.form-group').querySelector('.field-error');
+  /* 化身系統的 hidden input 不在 .form-group 內，直接略過 */
+  const group = input.closest('.form-group');
+  const errorEl = group && group.querySelector('.field-error');
   if (!errorEl) return;
   errorEl.textContent = message;
   input.setAttribute('aria-invalid', message ? 'true' : 'false');
@@ -52,11 +67,16 @@ form.addEventListener('focusout', e => {
   setFieldError(e.target, validateField(e.target));
 });
 
+/* 送出成功後化身入座需要用到姓名，先在送出當下記起來 */
+let submittedName = '';
+
 /* 送出表單 */
 form.addEventListener('submit', e => {
   e.preventDefault();
 
   if (!validateAll()) return;
+
+  submittedName = document.getElementById('field-name').value.trim();
 
   /* 將 form action 導向 Google 表單，並用隱藏 iframe 攔截跳轉 */
   form.action = FORM_ACTION;
@@ -80,6 +100,9 @@ function handleSuccess() {
 
   burstParticles(submitBtn);
   showSuccessPopup();
+
+  /* 通知化身系統讓剛報名的賓客入座（avatar.js 監聽） */
+  document.dispatchEvent(new CustomEvent('rsvp-success', { detail: { name: submittedName } }));
 }
 
 function showSuccessPopup() {

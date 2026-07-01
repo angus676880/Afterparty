@@ -51,6 +51,19 @@
       </div>
     </section>
 
+    <!-- ===== 派對化身產生器 ===== -->
+    <section class="avatar-builder reveal" aria-labelledby="avatar-heading">
+      <h2 id="avatar-heading" class="section-title">捏一個派對化身</h2>
+      <p class="avatar-builder__desc">挑好造型，完成下方報名後，你的化身就會入座頁尾的虛擬派對桌！</p>
+      <div class="avatar-builder__layout">
+        <div class="avatar-builder__panel">
+          <div id="avatar-preview" class="avatar-builder__preview" role="img" aria-label="化身即時預覽"></div>
+          <button type="button" id="avatar-random" class="btn-ghost">🎲 隨機一套</button>
+        </div>
+        <div id="avatar-controls" class="avatar-builder__controls"></div>
+      </div>
+    </section>
+
     <!-- ===== RSVP 表單 ===== -->
     <section class="rsvp reveal" aria-labelledby="rsvp-heading">
       <h2 id="rsvp-heading" class="section-title">RSVP 報名</h2>
@@ -97,6 +110,9 @@
           ></textarea>
         </div>
 
+        <!-- 化身代碼由 avatar.js 寫入；請將 name 換成 Google 表單「化身代碼」欄位的 entry ID -->
+        <input type="hidden" id="field-avatar" name="entry.1071090883" value="" />
+
         <button type="submit" class="btn-submit">
           <span class="btn-submit__text">送出報名 🎊</span>
           <span class="btn-submit__loading" aria-hidden="true">送出中…</span>
@@ -120,6 +136,17 @@
       ></iframe>
     </section>
 
+    <!-- ===== 虛擬派對現場 ===== -->
+    <section class="party-scene reveal" aria-labelledby="party-heading">
+      <h2 id="party-heading" class="section-title">虛擬派對現場</h2>
+      <p id="party-count" class="party-scene__count" aria-live="polite"></p>
+      <div id="party-floor" class="party-scene__floor" aria-label="派對現場：新人與賓客的像素化身"></div>
+      <div class="party-scene__actions">
+        <button type="button" id="party-refresh" class="btn-ghost">🔄 看看誰來了</button>
+      </div>
+      <p id="party-hint" class="party-scene__hint" hidden></p>
+    </section>
+
   </main>
 
   <footer class="site-footer">
@@ -128,5 +155,6 @@
 
   <script src="assets/js/main.js" defer></script>
   <script src="assets/js/effects.js" defer></script>
+  <script src="assets/js/avatar.js" defer></script>
 </body>
 </html>

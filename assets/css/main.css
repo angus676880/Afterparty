@@ -465,6 +465,23 @@ body {
   outline-offset: 3px;
 }
 
+/* ===== 報名截止提示 ===== */
+.rsvp-form:has(input:disabled) {
+  opacity: 0.5;
+  pointer-events: none;
+  user-select: none;
+}
+
+.form-closed-notice {
+  margin-top: var(--space-sm);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+}
+
 /* ===== 滑鼠光暈（CSS 變數由 JS 更新） ===== */
 body::after {
   content: '';
@@ -564,6 +581,412 @@ body::after {
   transform: translateY(0);
 }
 
+/* ===== 通用 ghost 按鈕 ===== */
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-family: var(--font-base);
+  font-size: 0.9rem;
+  padding: 0.5rem 1.2rem;
+  transition: color var(--transition), border-color var(--transition), transform var(--transition);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  color: var(--color-text);
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.btn-ghost:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-ghost:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ===== 無障礙：隱藏但保留給螢幕閱讀器 ===== */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== 派對化身產生器 ===== */
+.avatar-builder {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 var(--space-sm) var(--space-lg);
+}
+
+.avatar-builder__desc {
+  text-align: center;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.avatar-builder__layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.avatar-builder__panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-sm);
+  text-align: center;
+}
+
+.avatar-builder__preview svg {
+  width: min(150px, 45vw);
+  height: auto;
+  filter: drop-shadow(0 8px 24px rgba(224, 64, 251, 0.25));
+}
+
+.avatar-builder__panel .btn-ghost {
+  margin-top: var(--space-xs);
+}
+
+.avatar-builder__controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .avatar-builder__layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .avatar-builder__panel {
+    flex: 0 0 240px;
+    /* 選項多、捲動長，預覽釘住才看得到即時變化 */
+    position: sticky;
+    top: var(--space-sm);
+  }
+
+  .avatar-builder__controls {
+    flex: 1;
+  }
+}
+
+.avatar-group {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  padding: 0.6rem 1rem 1rem;
+}
+
+.avatar-group legend {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--color-accent);
+  padding: 0 0.3rem;
+}
+
+.avatar-group__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.avatar-option {
+  cursor: pointer;
+  position: relative;
+}
+
+.avatar-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.avatar-option__dot {
+  display: block;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border);
+  transition: transform var(--transition), border-color var(--transition);
+}
+
+.avatar-option__chip {
+  display: block;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-card);
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  transition: transform var(--transition), border-color var(--transition), color var(--transition), background var(--transition);
+}
+
+.avatar-option:hover .avatar-option__dot,
+.avatar-option:hover .avatar-option__chip {
+  transform: translateY(-2px);
+}
+
+.avatar-option input:checked + .avatar-option__dot {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(255, 214, 0, 0.3);
+}
+
+.avatar-option input:checked + .avatar-option__chip {
+  border-color: var(--color-accent);
+  color: var(--color-text);
+  background: rgba(224, 64, 251, 0.15);
+}
+
+.avatar-option input:focus-visible + .avatar-option__dot,
+.avatar-option input:focus-visible + .avatar-option__chip {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ===== 虛擬派對現場 ===== */
+.party-scene {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 var(--space-sm) var(--space-xl);
+}
+
+.party-scene__count {
+  text-align: center;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.party-scene__floor {
+  position: relative;
+  height: 340px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: linear-gradient(180deg, #1c1336 0%, #251a44 100%);
+}
+
+/* 牆面霓虹燈光 */
+.party-scene__floor::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 62% 0;
+  background:
+    radial-gradient(140px 90px at 25% 95%, rgba(224, 64, 251, 0.25), transparent 70%),
+    radial-gradient(140px 90px at 75% 95%, rgba(64, 196, 255, 0.22), transparent 70%);
+}
+
+/* 舞池棋盤格地板；z-index 壓底讓人物與裝飾都站在上面 */
+.party-scene__floor::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 62%;
+  z-index: 1;
+  background: repeating-conic-gradient(#2c2153 0% 25%, #231a45 0% 50%);
+  background-size: 44px 44px;
+  border-top: 2px solid rgba(224, 64, 251, 0.5);
+  box-shadow: 0 -10px 40px rgba(224, 64, 251, 0.15);
+}
+
+@media (min-width: 600px) {
+  .party-scene__floor {
+    height: 440px;
+  }
+}
+
+.partygoer {
+  position: absolute;
+  text-align: center;
+  transform: translate(-50%, -100%) scale(var(--scale, 1));
+  transform-origin: bottom center;
+}
+
+.partygoer__sprite {
+  transform: scaleX(var(--dir, 1));
+}
+
+.partygoer__sprite svg {
+  display: block;
+  width: 48px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.partygoer--couple .partygoer__sprite svg {
+  width: 72px;
+}
+
+@media (min-width: 600px) {
+  .partygoer__sprite svg {
+    width: 62px;
+  }
+
+  .partygoer--couple .partygoer__sprite svg {
+    width: 92px;
+  }
+}
+
+.partygoer__name {
+  display: inline-block;
+  max-width: 96px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 2px;
+  background: rgba(13, 13, 26, 0.8);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  color: var(--color-text-muted);
+  font-size: 0.68rem;
+  padding: 0 0.4rem;
+}
+
+.partygoer--couple .partygoer__name {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+  font-weight: 600;
+}
+
+.partygoer__bubble {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 62%;
+  padding: 0.1rem 0.4rem;
+  background: #fdfdfd;
+  color: var(--color-surface);
+  border-radius: 8px 8px 8px 0;
+  font-size: 0.85rem;
+  opacity: 0;
+  transform: scale(0);
+  transform-origin: bottom left;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+  pointer-events: none;
+}
+
+.partygoer.is-talking .partygoer__bubble {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* steps() 讓走路上下晃動帶像素遊戲感 */
+@keyframes walk-bob {
+  0%, 100% { transform: scaleX(var(--dir, 1)) translateY(0); }
+  50%      { transform: scaleX(var(--dir, 1)) translateY(-3px); }
+}
+
+.partygoer.is-walking .partygoer__sprite {
+  animation: walk-bob 0.3s steps(2) infinite;
+}
+
+.party-deco {
+  position: absolute;
+}
+
+.party-deco svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.party-deco--floor {
+  transform: translate(-50%, -100%) scale(var(--scale, 1));
+  transform-origin: bottom center;
+}
+
+/* ===== 迪斯可球：擺盪 + 亮片輪轉 + 光暈脈動 ===== */
+.party-deco--disco {
+  animation: disco-glow 1.8s ease-in-out infinite;
+}
+
+.party-deco--disco svg {
+  transform-origin: 50% 0;
+  animation: disco-swing 5s ease-in-out infinite;
+}
+
+@keyframes disco-glow {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(179, 236, 255, 0.5)); }
+  50%      { filter: drop-shadow(0 0 14px rgba(179, 236, 255, 0.95)); }
+}
+
+@keyframes disco-swing {
+  0%, 100% { transform: rotate(-4deg); }
+  50%      { transform: rotate(4deg); }
+}
+
+/* 兩組亮片交錯閃爍，做出球面旋轉的錯覺 */
+.disco__a {
+  animation: disco-face-a 0.8s steps(1) infinite;
+}
+
+.disco__b {
+  opacity: 0;
+  animation: disco-face-b 0.8s steps(1) infinite;
+}
+
+@keyframes disco-face-a {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes disco-face-b {
+  0%, 49%   { opacity: 0; }
+  50%, 100% { opacity: 1; }
+}
+
+/* ===== 霓虹燈牌閃爍 ===== */
+.party-deco--neon {
+  filter: drop-shadow(0 0 8px rgba(255, 64, 129, 0.8));
+  animation: neon-flicker 3.2s steps(1) infinite;
+}
+
+@keyframes neon-flicker {
+  0%, 86%, 90%, 100% { opacity: 1; }
+  88%, 93%           { opacity: 0.35; }
+}
+
+.party-scene__empty {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  background: rgba(13, 13, 26, 0.6);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem;
+}
+
+.party-scene__actions {
+  text-align: center;
+  margin-top: var(--space-sm);
+}
+
+.party-scene__hint {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: var(--space-sm);
+}
+
 /* ===== 無障礙：減少動態 ===== */
 @media (prefers-reduced-motion: reduce) {
   .confetti-layer span,
@@ -571,7 +994,17 @@ body::after {
   .btn-submit,
   .rsvp-success,
   .hero::before,
-  body::after {
+  body::after,
+  .partygoer__sprite,
+  .partygoer__bubble,
+  .party-deco--disco,
+  .party-deco--disco svg,
+  .disco__a,
+  .disco__b,
+  .party-deco--neon,
+  .avatar-option__dot,
+  .avatar-option__chip,
+  .btn-ghost {
     animation: none;
     transition: none;
   }
