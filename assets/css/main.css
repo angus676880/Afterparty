@@ -380,13 +380,125 @@ body {
   text-decoration: underline;
 }
 
+/* ===== 滑鼠光暈（CSS 變數由 JS 更新） ===== */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    520px circle at var(--mouse-x, -9999px) var(--mouse-y, -9999px),
+    rgba(224, 64, 251, 0.07),
+    transparent 70%
+  );
+}
+
+/* ===== Hero 深度光暈脈衝 ===== */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% -10%, rgba(100, 0, 200, 0.45) 0%, transparent 65%);
+  animation: hero-pulse 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes hero-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.55; }
+}
+
+/* ===== 浮動光球 ===== */
+@keyframes orb-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(18px, -28px) scale(1.06); }
+  66%       { transform: translate(-14px, 14px) scale(0.94); }
+}
+
+/* ===== 標題 Glitch ===== */
+.hero__title {
+  position: relative;
+}
+
+.hero__title::before,
+.hero__title::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero__title::before {
+  background-image: linear-gradient(135deg, #ff4081, #ff4081);
+  clip-path: polygon(0 15%, 100% 15%, 100% 40%, 0 40%);
+}
+
+.hero__title::after {
+  background-image: linear-gradient(135deg, #40c4ff, #40c4ff);
+  clip-path: polygon(0 62%, 100% 62%, 100% 82%, 0 82%);
+}
+
+.hero__title.is-glitching::before {
+  opacity: 1;
+  animation: glitch-a 0.36s steps(2) forwards;
+}
+
+.hero__title.is-glitching::after {
+  opacity: 1;
+  animation: glitch-b 0.36s steps(2) forwards;
+}
+
+@keyframes glitch-a {
+  0%   { transform: translate(-5px, 0); clip-path: polygon(0 15%, 100% 15%, 100% 40%, 0 40%); }
+  50%  { transform: translate(5px, 0);  clip-path: polygon(0 5%,  100% 5%,  100% 22%, 0 22%); }
+  100% { transform: translate(0, 0);   opacity: 0; }
+}
+
+@keyframes glitch-b {
+  0%   { transform: translate(5px, 0);  clip-path: polygon(0 62%, 100% 62%, 100% 82%, 0 82%); }
+  50%  { transform: translate(-4px, 0); clip-path: polygon(0 72%, 100% 72%, 100% 90%, 0 90%); }
+  100% { transform: translate(0, 0);   opacity: 0; }
+}
+
+/* ===== Scroll Reveal ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.75s ease, transform 0.75s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* ===== 無障礙：減少動態 ===== */
 @media (prefers-reduced-motion: reduce) {
   .confetti-layer span,
   .info-card,
   .btn-submit,
-  .rsvp-success {
+  .rsvp-success,
+  .hero::before,
+  body::after {
     animation: none;
+    transition: none;
+  }
+
+  .hero__title::before,
+  .hero__title::after {
+    display: none;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
     transition: none;
   }
 }
