@@ -189,6 +189,28 @@
         [4, 22, 3, 1, '#f0f0f0'], [9, 22, 3, 1, '#f0f0f0'],
       ],
     },
+    {
+      /* full：全身布偶裝，會套住頭臉與髮型（renderGuest 據此跳過本體不畫）。
+         新服裝一律加在陣列尾端，索引位移會讓既有化身代碼穿錯衣服 */
+      label: '恐龍裝',
+      full: true,
+      pixels: () => [
+        [3, 1, 10, 6, '#43a047'],
+        [5, 0, 1, 1, '#2e7d32'], [10, 0, 1, 1, '#2e7d32'],
+        [4, 2, 2, 2, '#fdfdfd'], [10, 2, 2, 2, '#fdfdfd'],
+        [5, 3, 1, 1, INK], [10, 3, 1, 1, INK],
+        [6, 5, 1, 1, '#2e7d32'], [9, 5, 1, 1, '#2e7d32'],
+        [3, 7, 10, 2, '#2e7d32'],
+        [4, 7, 1, 1, '#fdfdfd'], [6, 7, 1, 1, '#fdfdfd'], [8, 7, 1, 1, '#fdfdfd'], [10, 7, 1, 1, '#fdfdfd'],
+        [4, 9, 8, 7, '#43a047'],
+        [6, 10, 4, 6, '#d7e8a0'],
+        [3, 10, 1, 3, '#43a047'], [12, 10, 1, 3, '#43a047'],
+        [3, 12, 1, 1, '#2e7d32'], [12, 12, 1, 1, '#2e7d32'],
+        [12, 13, 2, 2, '#43a047'], [14, 14, 1, 2, '#43a047'], [15, 15, 1, 1, '#2e7d32'],
+        [4, 16, 3, 6, '#43a047'], [9, 16, 3, 6, '#43a047'],
+        [3, 22, 4, 1, '#2e7d32'], [9, 22, 4, 1, '#2e7d32'],
+      ],
+    },
   ];
 
   const ACCESSORIES = [
@@ -254,10 +276,14 @@
 
   function renderGuest(s) {
     const skin = SKINS[s.skin];
+    const outfit = OUTFITS[s.outfit];
+    /* 全身布偶裝把整個人（頭臉、髮型）都套住，只保留外掛配件 */
+    const person = outfit.full
+      ? []
+      : [...headAndFace(skin), ...HAIR_STYLES[s.hair].pixels(HAIR_COLORS[s.hairColor])];
     return pixelSvg([
-      ...OUTFITS[s.outfit].pixels(skin),
-      ...headAndFace(skin),
-      ...HAIR_STYLES[s.hair].pixels(HAIR_COLORS[s.hairColor]),
+      ...outfit.pixels(skin),
+      ...person,
       ...ACCESSORIES[s.acc].pixels(skin),
     ], 16, 24);
   }
