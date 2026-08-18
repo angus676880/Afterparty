@@ -14,7 +14,7 @@
  */
 const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLScO5mobWJaKIFmA3gjdz20hviLtJXRpnWvfkpOuOW4qMyw5hg/formResponse';
 
-const DEADLINE = new Date('2026-08-16T00:00:00+08:00');
+const DEADLINE = new Date('2026-08-21T00:00:00+08:00');
 
 const form = document.getElementById('rsvp-form');
 const successPanel = document.getElementById('rsvp-success');
@@ -28,7 +28,7 @@ if (new Date() >= DEADLINE) {
   });
   const notice = document.createElement('p');
   notice.className = 'form-closed-notice';
-  notice.textContent = '報名已於 8/15 截止，感謝所有參與者！';
+  notice.textContent = '報名已於 8/20 截止，感謝所有參與者！';
   form.insertAdjacentElement('afterend', notice);
 }
 
