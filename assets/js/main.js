@@ -14,7 +14,7 @@
  */
 const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLScO5mobWJaKIFmA3gjdz20hviLtJXRpnWvfkpOuOW4qMyw5hg/formResponse';
 
-const DEADLINE = new Date('2026-08-21T00:00:00+08:00');
+const DEADLINE = new Date('2026-08-26T00:00:00+08:00');
 
 const form = document.getElementById('rsvp-form');
 const successPanel = document.getElementById('rsvp-success');
