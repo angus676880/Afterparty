@@ -22,7 +22,8 @@
   --space-lg: 4rem;
   --space-xl: 6rem;
 
-  --font-base: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  /* 明列各平台的彩色 emoji 字型：Windows 上沒指定時，部分瀏覽器會退回黑白的 Segoe UI Symbol 或顯示空白 */
+  --font-base: 'Segoe UI', system-ui, -apple-system, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --transition: 0.25s ease;
 }
 

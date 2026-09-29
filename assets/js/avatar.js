@@ -603,7 +603,7 @@
   const GUEST_MIN_Y = 42;
   const GUEST_MAX_Y = 88;
   const GUEST_EMOJIS = ['💬', '🍻', '🎶', '😄', '🥂', '✨', '🕺', '💃'];
-  const COUPLE_EMOJIS = ['💍', '🥰', '❤️', '🎂'];
+  const COUPLE_EMOJIS = ['💍', '😍', '❤️', '🎂'];
 
   let liveGuests = [];
   let coupleLives = [];
@@ -829,7 +829,7 @@
   /* ===== 迪斯可彩蛋：點迪斯可球 → 關燈、彩色光束掃射、全場跳舞 ===== */
 
   const DISCO_MS = 10000;
-  const DANCE_EMOJIS = ['🕺', '💃', '🎶', '🪩', '✨'];
+  const DANCE_EMOJIS = ['🕺', '💃', '🎶', '🎵', '✨'];
   let discoTimer = 0;
 
   function startDisco() {
