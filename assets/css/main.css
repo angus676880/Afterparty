@@ -446,6 +446,37 @@ body {
   }
 }
 
+/* ===== 場地地址 ===== */
+.venue-address {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+.venue-map-link {
+  display: inline-block;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-gold);
+}
+
+.venue-map-link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* 淺色信紙上改用深色，維持 4.5:1 對比 */
+.invite-card .venue-address {
+  color: var(--paper-muted);
+}
+
+.invite-card .venue-map-link {
+  color: #7b1fa2;
+}
+
 /* ===== RSVP ===== */
 .rsvp {
   max-width: 620px;
