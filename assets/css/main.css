@@ -481,6 +481,65 @@ body {
   font-size: 0.85rem;
 }
 
+/* ===== 怎麼到場 ===== */
+.route {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 var(--space-sm) var(--space-lg);
+}
+
+/* 捲到這裡時區塊的淡入動畫還會往上位移 32px，預留空間避免標題被切到 */
+.route .section-title {
+  scroll-margin-top: var(--space-lg);
+}
+
+.route-steps {
+  list-style: none;
+  counter-reset: route;
+  display: grid;
+  gap: var(--space-md);
+}
+
+.route-step {
+  counter-increment: route;
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.route-step__text {
+  position: relative;
+  padding-left: 2.4rem;
+  font-size: 1.05rem;
+}
+
+/* 步驟順序本身就是資訊，用圓形數字標出 */
+.route-step__text::before {
+  content: counter(route);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-bg);
+  font-weight: 800;
+}
+
+.route-step__text strong {
+  color: var(--color-gold);
+}
+
+.route-step img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
 /* ===== 場地地址 ===== */
 .venue-address {
   display: block;
@@ -508,6 +567,11 @@ body {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--color-gold);
+}
+
+.venue-map-link--block {
+  display: block;
+  width: fit-content;
 }
 
 .venue-map-link:focus-visible {

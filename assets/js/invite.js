@@ -53,6 +53,18 @@
 
   closeBtn.addEventListener('click', () => dialog.close());
 
+  /* 彈窗開著時錨點會被遮住，且關閉時瀏覽器會把焦點還給開啟按鈕而跳回頂端，
+     所以先關窗再自己捲動到目標 */
+  dialog.addEventListener('click', e => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+    const target = document.querySelector(link.getAttribute('href'));
+    if (!target) return;
+    e.preventDefault();
+    dialog.close();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
   /* 點到 dialog 本體（即背景遮罩區）才關閉，點內容不會誤關 */
   dialog.addEventListener('click', e => {
     if (e.target === dialog) dialog.close();
