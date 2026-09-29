@@ -194,11 +194,76 @@ body {
   color: var(--color-text);
 }
 
-/* ===== 邀請函信封 ===== */
+/* ===== 邀請函彈出視窗 ===== */
+.hero__invite-btn {
+  margin-top: var(--space-md);
+  padding: 0.7rem 1.6rem;
+  border: 1px solid var(--color-gold);
+  border-radius: 999px;
+  background: rgba(255, 214, 0, 0.1);
+  color: var(--color-gold);
+  font-family: var(--font-base);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.hero__invite-btn:hover {
+  background: rgba(255, 214, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.hero__invite-btn:focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+/* padding 歸零：點擊判斷靠 e.target === dialog，只有遮罩區才等於 dialog 本身 */
+.invite-dialog {
+  width: min(680px, calc(100% - 2 * var(--space-sm)));
+  max-height: calc(100dvh - 2 * var(--space-sm));
+  margin: auto;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.invite-dialog::backdrop {
+  background: rgba(8, 6, 20, 0.82);
+  backdrop-filter: blur(4px);
+}
+
+.invite-dialog[open] {
+  animation: overlay-fade-in 0.3s ease;
+}
+
+.invite-dialog__close {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: block;
+  margin-left: auto;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.invite-dialog__close:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 .invite {
-  max-width: 620px;
-  margin: 0 auto;
-  padding: var(--space-lg) var(--space-sm) 0;
+  padding: var(--space-xs) var(--space-xs) var(--space-md);
   text-align: center;
   --envelope-body: #2a1f4a;
   --envelope-flap: #3d2a6b;
@@ -285,7 +350,7 @@ body {
 
 /* 翻開的封蓋會往上凸出（高度 = 信封寬 × 2/3 × 58%），預留空間避免蓋到標題 */
 .invite.is-open .invite__envelope {
-  margin-top: calc(min(320px, 100%) * 0.39);
+  margin-top: calc(min(320px, 100%) * 0.42);
 }
 
 .invite.is-open .invite__flap {
@@ -360,73 +425,25 @@ body {
   font-weight: 800;
 }
 
-.invite-card__count {
+.invite-card__subtitle {
+  margin-bottom: var(--space-xs);
+}
+
+/* 派對現場搬進卡片時縮小高度，避免彈窗太長；深色舞池在淺色信紙上自成一塊 */
+.invite-card__scene .party-scene__count {
   color: var(--paper-muted);
   font-size: 0.85rem;
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-xs);
 }
 
-.invite-card__roster {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--space-sm) var(--space-xs);
-  padding: var(--space-sm) var(--space-xs);
-  border-radius: var(--radius-sm);
-  background: var(--color-bg);
+.invite-card__scene .party-scene__floor {
+  height: 280px;
 }
 
-.roster-item {
-  width: 64px;
-  text-align: center;
-}
-
-.roster-item__sprite svg {
-  display: block;
-  width: 36px;
-  height: auto;
-  margin: 0 auto;
-}
-
-.roster-item--couple .roster-item__sprite svg {
-  width: 44px;
-}
-
-.roster-item__name {
-  display: block;
-  margin-top: 2px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 0.7rem;
-  color: var(--color-text-muted);
-}
-
-.roster-item--couple .roster-item__name {
-  color: var(--color-gold);
-  font-weight: 600;
-}
-
-.invite-card__cta {
-  display: inline-block;
-  margin-top: var(--space-md);
-  padding: 0.6rem 1.4rem;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--color-accent), #7b1fa2);
-  color: #fff;
-  font-weight: 700;
-  text-decoration: none;
-  transition: transform var(--transition);
-}
-
-.invite-card__cta:hover {
-  transform: translateY(-2px);
-}
-
-.invite-card__cta:focus-visible {
-  outline: 3px solid var(--color-accent);
-  outline-offset: 3px;
+@media (min-width: 600px) {
+  .invite-card__scene .party-scene__floor {
+    height: 340px;
+  }
 }
 
 /* ===== RSVP ===== */
@@ -1244,7 +1261,8 @@ body::after {
   .invite__flap,
   .invite__seal,
   .invite-card,
-  .invite-card__cta {
+  .invite-dialog,
+  .hero__invite-btn {
     animation: none;
     transition: none;
   }

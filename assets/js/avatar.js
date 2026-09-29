@@ -463,8 +463,6 @@
   const countEl = document.getElementById('party-count');
   const refreshBtn = document.getElementById('party-refresh');
   const hintEl = document.getElementById('party-hint');
-  const rosterEl = document.getElementById('invite-roster');
-  const rosterCountEl = document.getElementById('invite-count');
 
   if (!previewEl || !controlsEl || !floorEl) return;
 
@@ -747,29 +745,6 @@
     }
   }
 
-  /* ===== 邀請函出席名單 ===== */
-
-  function rosterItem(svg, name, extraClass = '') {
-    return `<li class="roster-item ${extraClass}">
-      <span class="roster-item__sprite">${svg}</span>
-      <span class="roster-item__name">${escapeHtml(name)}</span>
-    </li>`;
-  }
-
-  function renderInviteRoster(seated) {
-    if (!rosterEl) return;
-    rosterEl.innerHTML = [
-      rosterItem(renderGroom(), COUPLE_NAMES.groom, 'roster-item--couple'),
-      rosterItem(renderBride(), COUPLE_NAMES.bride, 'roster-item--couple'),
-      ...seated.map(g => rosterItem(renderGuest(decodeAvatar(g.code)), g.name)),
-    ].join('');
-    if (rosterCountEl) {
-      rosterCountEl.textContent = seated.length
-        ? `新人與 ${seated.length} 位賓客已確定出席`
-        : '目前只有新人，等你成為第一位賓客！';
-    }
-  }
-
   let guests = loadLocal();
 
   function renderGuests() {
@@ -781,7 +756,6 @@
 
     const seated = guests.filter(g => decodeAvatar(g.code));
     seated.forEach(spawnGuest);
-    renderInviteRoster(seated);
     emptyEl.hidden = seated.length > 0;
     countEl.textContent = seated.length
       ? `🎉 新人已就位，${seated.length} 位賓客到場同樂中`
@@ -833,9 +807,7 @@
     guests.push(guest);
     spawnGuest(guest);
     emptyEl.hidden = true;
-    const seated = guests.filter(g => decodeAvatar(g.code));
-    countEl.textContent = `🎉 新人已就位，${seated.length} 位賓客到場同樂中`;
-    renderInviteRoster(seated);
+    countEl.textContent = `🎉 新人已就位，${guests.filter(g => decodeAvatar(g.code)).length} 位賓客到場同樂中`;
   });
 
   buildControls();
