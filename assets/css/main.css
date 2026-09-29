@@ -363,8 +363,16 @@ body {
   transform: rotateX(180deg);
 }
 
+/* 碎裂瞬間就要消失，碎片才接得上；收起時仍沿用基本規則淡入 */
 .invite.is-open .invite__seal {
   opacity: 0;
+  transition: none;
+}
+
+.seal-shard {
+  position: fixed;
+  z-index: 10;
+  pointer-events: none;
 }
 
 .invite-card {
@@ -652,6 +660,90 @@ body {
   text-align: center;
   color: var(--color-text);
   margin-bottom: var(--space-xs);
+}
+
+/* ===== 狼人殺身分預抽 ===== */
+.werewolf {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 0 var(--space-sm) var(--space-xl);
+  text-align: center;
+}
+
+.werewolf__desc {
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.role-card {
+  width: 200px;
+  aspect-ratio: 5 / 7;
+  max-width: 100%;
+  margin: 0 auto var(--space-md);
+  perspective: 800px;
+}
+
+.role-card__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.45s steps(6);
+}
+
+/* 翻牌用 steps() 做成一格一格的像素遊戲感 */
+.role-card.is-revealed .role-card__inner {
+  transform: rotateY(180deg);
+}
+
+.role-card__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  border: 3px solid var(--color-gold);
+  border-radius: var(--radius-sm);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.role-card__back {
+  background: repeating-conic-gradient(#2c2153 0% 25%, #231a45 0% 50%) 0 0 / 24px 24px;
+  color: var(--color-gold);
+  font-size: 4rem;
+  font-weight: 900;
+  text-shadow: 3px 3px 0 var(--color-accent);
+}
+
+.role-card__front {
+  background: var(--color-card);
+  transform: rotateY(180deg);
+}
+
+.role-card__icon svg {
+  display: block;
+  width: 96px;
+  height: 96px;
+}
+
+.role-card__name {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--color-gold);
+}
+
+.role-card__line {
+  font-size: 0.85rem;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+.role-draw {
+  font-size: 1rem;
 }
 
 /* ===== RSVP ===== */
@@ -1274,12 +1366,26 @@ body::after {
 
 .partygoer {
   position: absolute;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
   text-align: center;
+  cursor: pointer;
   transform: translate(-50%, -100%) scale(var(--scale, 1));
   transform-origin: bottom center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.partygoer:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .partygoer__sprite {
+  display: block;
   transform: scaleX(var(--dir, 1));
 }
 
@@ -1334,6 +1440,11 @@ body::after {
   color: var(--color-surface);
   border-radius: 8px 8px 8px 0;
   font-size: 0.85rem;
+  line-height: 1.35;
+  /* 心願可能是一整句，限制寬度讓它換行而不是拉成一長條 */
+  width: max-content;
+  max-width: 150px;
+  text-align: left;
   opacity: 0;
   transform: scale(0);
   transform-origin: bottom left;
@@ -1354,6 +1465,31 @@ body::after {
 
 .partygoer.is-walking .partygoer__sprite {
   animation: walk-bob 0.3s steps(2) infinite;
+}
+
+/* 點擊後的小跳舞；放在 walk-bob 之後，走路中被點也會優先跳舞 */
+@keyframes goer-dance {
+  0%, 100% { transform: scaleX(var(--dir, 1)) translateY(0) rotate(0); }
+  25%      { transform: scaleX(var(--dir, 1)) translateY(-8px) rotate(-10deg); }
+  50%      { transform: scaleX(calc(var(--dir, 1) * -1)) translateY(0) rotate(0); }
+  75%      { transform: scaleX(calc(var(--dir, 1) * -1)) translateY(-8px) rotate(10deg); }
+}
+
+.partygoer.is-dancing .partygoer__sprite {
+  animation: goer-dance 0.8s steps(4) 1;
+}
+
+.pixel-heart {
+  position: absolute;
+  z-index: 200;
+  width: 22px;
+  pointer-events: none;
+}
+
+.pixel-heart svg {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .party-deco {
@@ -1471,7 +1607,8 @@ body::after {
   .invite-card,
   .invite-dialog,
   .hero__invite-btn,
-  .calendar-link {
+  .calendar-link,
+  .role-card__inner {
     animation: none;
     transition: none;
   }

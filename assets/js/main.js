@@ -131,7 +131,8 @@ function showSuccessPopup() {
   document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); }, { once: true });
 }
 
-function burstParticles(originEl) {
+/* container：modal dialog 位於最上層（top layer），粒子須放進 dialog 內才看得到 */
+function burstParticles(originEl, container = document.body) {
   const rect = originEl.getBoundingClientRect();
   const cx = rect.left + rect.width / 2;
   const cy = rect.top + rect.height / 2;
@@ -154,7 +155,7 @@ function burstParticles(originEl) {
       pointerEvents: 'none',
       zIndex: '2000',
     });
-    document.body.appendChild(p);
+    container.appendChild(p);
 
     p.animate([
       { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },

@@ -571,15 +571,18 @@
     return rows;
   }
 
-  /* 化身欄位靠格式自動偵測，欄位順序變動也不會壞 */
+  /* 化身欄位靠格式自動偵測，欄位順序變動也不會壞；
+     許願池欄位則靠標題含「許願」辨認，找不到就不顯示心願 */
   function rowsToGuests(rows) {
     const guests = [];
+    const wishCol = (rows[0] || []).findIndex(h => h.includes('許願'));
     for (const row of rows.slice(1)) {
       const code = row.find(c => AVATAR_CODE_RE.test(c.trim()));
       if (!code) continue;
       guests.push({
         name: (row[NAME_COLUMN] || '').trim() || '神秘嘉賓',
         code: code.trim(),
+        wish: wishCol >= 0 ? (row[wishCol] || '').trim() : '',
       });
     }
     return guests;
@@ -625,12 +628,13 @@
     el.style.setProperty('--scale', depthScale(y).toFixed(3));
   }
 
+  /* 用 button 讓人物可被點擊與鍵盤操作；button 內只能放行內元素，所以全用 span */
   function goerMarkup(svg, name, extraClass = '') {
-    return `<div class="partygoer ${extraClass}">
+    return `<button type="button" class="partygoer ${extraClass}">
       <span class="partygoer__bubble" aria-hidden="true"></span>
-      <div class="partygoer__sprite">${svg}</div>
+      <span class="partygoer__sprite">${svg}</span>
       <span class="partygoer__name">${escapeHtml(name)}</span>
-    </div>`;
+    </button>`;
   }
 
   /* first：進場後極短延遲且必定移動，讓頁面一打開就有動靜 */
@@ -665,7 +669,7 @@
     const el = wrap.firstElementChild;
     placeGoer(el, spot.x, spot.y);
     floorEl.appendChild(el);
-    const live = { el, x: spot.x, y: spot.y, timer: 0 };
+    const live = { el, x: spot.x, y: spot.y, timer: 0, wish: guest.wish || '' };
     liveGuests.push(live);
     if (!REDUCED_MOTION) scheduleWander(live, true);
   }
@@ -682,7 +686,7 @@
       const el = wrap.firstElementChild;
       placeGoer(el, x, 86);
       floorEl.appendChild(el);
-      const live = { el, x, y: 86, timer: 0 };
+      const live = { el, x, y: 86, timer: 0, couple: true };
       coupleLives.push(live);
       if (!REDUCED_MOTION) scheduleWander(live, true);
     });
@@ -731,19 +735,87 @@
       const popBubble = () => {
         const pool = liveGuests
           .filter(g => !g.el.classList.contains('is-walking'))
-          .map(g => ({ el: g.el, emojis: GUEST_EMOJIS }))
-          .concat(coupleLives.map(c => ({ el: c.el, emojis: COUPLE_EMOJIS })));
+          .concat(coupleLives);
         if (!pool.length) return;
         const pick = pool[Math.floor(Math.random() * pool.length)];
-        pick.el.querySelector('.partygoer__bubble').textContent =
-          pick.emojis[Math.floor(Math.random() * pick.emojis.length)];
-        pick.el.classList.add('is-talking');
-        setTimeout(() => pick.el.classList.remove('is-talking'), 2400);
+        const useWish = pick.wish && Math.random() < 0.35;
+        showBubble(pick.el, useWish ? pick.wish : randomOf(pick.couple ? COUPLE_EMOJIS : GUEST_EMOJIS), useWish ? 4200 : 2400);
       };
       setTimeout(popBubble, 700);
       setInterval(popBubble, 3600);
     }
   }
+
+  /* ===== 點人物互動 ===== */
+
+  const GUEST_QUIPS = [
+    '今晚不醉不歸！', '麻將三缺一，來嗎？', 'KTV 麥克風是我的', '狼人殺我絕對是好人',
+    '飛鏢比一場？', '撞球誰要單挑？', 'Switch 派對走起', '恭喜新人！', '桌遊我全都要',
+  ];
+  const WISH_MAX = 40;
+
+  function randomOf(list) {
+    return list[Math.floor(Math.random() * list.length)];
+  }
+
+  const bubbleTimers = new WeakMap();
+
+  function showBubble(el, text, ms) {
+    const bubble = el.querySelector('.partygoer__bubble');
+    bubble.textContent = text.length > WISH_MAX ? `${text.slice(0, WISH_MAX)}…` : text;
+    el.classList.add('is-talking');
+    clearTimeout(bubbleTimers.get(el));
+    bubbleTimers.set(el, setTimeout(() => el.classList.remove('is-talking'), ms));
+  }
+
+  /* 從新人頭上冒出一串像素愛心 */
+  function burstHearts(el) {
+    if (REDUCED_MOTION) return;
+    const floorRect = floorEl.getBoundingClientRect();
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left - floorRect.left + rect.width / 2;
+    const cy = rect.top - floorRect.top + rect.height * 0.2;
+    for (let i = 0; i < 7; i++) {
+      const heart = document.createElement('span');
+      heart.className = 'pixel-heart';
+      heart.setAttribute('aria-hidden', 'true');
+      heart.innerHTML = drawNeonHeart();
+      heart.style.left = `${cx}px`;
+      heart.style.top = `${cy}px`;
+      floorEl.appendChild(heart);
+      const dx = (Math.random() - 0.5) * 120;
+      const dy = -60 - Math.random() * 90;
+      heart.animate([
+        { transform: 'translate(-50%, -50%) scale(0.4)', opacity: 1 },
+        { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(1)`, opacity: 0 },
+      ], { duration: 900 + Math.random() * 500, easing: 'ease-out', fill: 'forwards' })
+        .onfinish = () => heart.remove();
+    }
+  }
+
+  floorEl.addEventListener('click', e => {
+    const el = e.target.closest('.partygoer');
+    if (!el) return;
+    const live = liveGuests.concat(coupleLives).find(g => g.el === el);
+    if (!live) return;
+    if (live.couple) {
+      showBubble(el, randomOf(COUPLE_EMOJIS), 2400);
+      burstHearts(el);
+      return;
+    }
+    showBubble(el, live.wish || randomOf(GUEST_QUIPS), live.wish ? 4200 : 2400);
+    if (!REDUCED_MOTION) {
+      /* 重新觸發動畫需先移除 class 並強制重排 */
+      el.classList.remove('is-dancing');
+      void el.offsetWidth;
+      el.classList.add('is-dancing');
+    }
+  });
+
+  floorEl.addEventListener('animationend', e => {
+    const el = e.target.closest('.partygoer');
+    if (el && e.animationName === 'goer-dance') el.classList.remove('is-dancing');
+  });
 
   let guests = loadLocal();
 

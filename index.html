@@ -142,6 +142,24 @@
       <p id="party-hint" class="party-scene__hint" hidden></p>
     </section>
 
+    <!-- ===== 狼人殺身分預抽 ===== -->
+    <section class="werewolf reveal" aria-labelledby="werewolf-heading">
+      <h2 id="werewolf-heading" class="section-title">狼人殺身分預抽</h2>
+      <p class="werewolf__desc">先抽抽看今晚的你是誰？純屬娛樂，當晚正式開局會重抽。</p>
+      <div id="role-card" class="role-card">
+        <div class="role-card__inner">
+          <div class="role-card__face role-card__back" aria-hidden="true">?</div>
+          <div class="role-card__face role-card__front">
+            <div id="role-icon" class="role-card__icon"></div>
+            <p id="role-name" class="role-card__name"></p>
+            <p id="role-line" class="role-card__line"></p>
+          </div>
+        </div>
+      </div>
+      <p id="role-live" class="visually-hidden" aria-live="polite"></p>
+      <button type="button" id="role-draw" class="btn-ghost role-draw">🃏 抽身分</button>
+    </section>
+
     <!-- 報名已截止：以下兩區隱藏但保留，main.js 與 avatar.js 仍依賴其中的元素 -->
     <!-- ===== 派對化身產生器 ===== -->
     <section class="avatar-builder reveal" hidden aria-labelledby="avatar-heading">
@@ -314,5 +332,6 @@
   <script src="assets/js/avatar.js" defer></script>
   <script src="assets/js/invite.js" defer></script>
   <script src="assets/js/countdown.js" defer></script>
+  <script src="assets/js/werewolf.js" defer></script>
 </body>
 </html>
