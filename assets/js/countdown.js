@@ -2,7 +2,7 @@
 (function initCountdown() {
   /* 須與 index.html 的日期時間、assets/after-party.ics 的 DTSTART 保持一致 */
   const PARTY_START = new Date('2026-10-25T22:00:00+08:00');
-  /* 開始後這段時間內顯示「進行中」，之後改顯示結束 */
+  /* 22:00 到凌晨 04:00 顯示「進行中」，需與 .ics 的 DTEND 一致 */
   const PARTY_LENGTH_MS = 6 * 60 * 60 * 1000;
 
   const el = document.getElementById('countdown');
