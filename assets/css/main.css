@@ -662,90 +662,6 @@ body {
   margin-bottom: var(--space-xs);
 }
 
-/* ===== 狼人殺身分預抽 ===== */
-.werewolf {
-  max-width: 620px;
-  margin: 0 auto;
-  padding: 0 var(--space-sm) var(--space-xl);
-  text-align: center;
-}
-
-.werewolf__desc {
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-md);
-}
-
-.role-card {
-  width: 200px;
-  aspect-ratio: 5 / 7;
-  max-width: 100%;
-  margin: 0 auto var(--space-md);
-  perspective: 800px;
-}
-
-.role-card__inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  transition: transform 0.45s steps(6);
-}
-
-/* 翻牌用 steps() 做成一格一格的像素遊戲感 */
-.role-card.is-revealed .role-card__inner {
-  transform: rotateY(180deg);
-}
-
-.role-card__face {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-xs);
-  padding: var(--space-sm);
-  border: 3px solid var(--color-gold);
-  border-radius: var(--radius-sm);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-.role-card__back {
-  background: repeating-conic-gradient(#2c2153 0% 25%, #231a45 0% 50%) 0 0 / 24px 24px;
-  color: var(--color-gold);
-  font-size: 4rem;
-  font-weight: 900;
-  text-shadow: 3px 3px 0 var(--color-accent);
-}
-
-.role-card__front {
-  background: var(--color-card);
-  transform: rotateY(180deg);
-}
-
-.role-card__icon svg {
-  display: block;
-  width: 96px;
-  height: 96px;
-}
-
-.role-card__name {
-  font-size: 1.5rem;
-  font-weight: 900;
-  color: var(--color-gold);
-}
-
-.role-card__line {
-  font-size: 0.85rem;
-  color: var(--color-text);
-  line-height: 1.5;
-}
-
-.role-draw {
-  font-size: 1rem;
-}
-
 /* ===== RSVP ===== */
 .rsvp {
   max-width: 620px;
@@ -1507,6 +1423,89 @@ body::after {
   transform-origin: bottom center;
 }
 
+button.party-deco {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button.party-deco:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ===== 迪斯可彩蛋 ===== */
+/* z-index 2：蓋住牆面與地板（關燈），但在人物（z ≥ 42）之下，人物依然清楚 */
+.disco-lights {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+  background: rgba(5, 3, 15, 0.62);
+  animation: disco-fade-in 0.4s ease;
+}
+
+@keyframes disco-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* 從天花板中央放射的彩色光束 */
+.disco-lights__beams {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 220%;
+  aspect-ratio: 1;
+  background: conic-gradient(
+    transparent 0deg 12deg, rgba(255, 64, 129, 0.35) 12deg 20deg,
+    transparent 20deg 57deg, rgba(64, 196, 255, 0.35) 57deg 65deg,
+    transparent 65deg 102deg, rgba(255, 214, 0, 0.3) 102deg 110deg,
+    transparent 110deg 147deg, rgba(105, 240, 174, 0.3) 147deg 155deg,
+    transparent 155deg 192deg, rgba(224, 64, 251, 0.35) 192deg 200deg,
+    transparent 200deg 237deg, rgba(64, 196, 255, 0.35) 237deg 245deg,
+    transparent 245deg 282deg, rgba(255, 64, 129, 0.35) 282deg 290deg,
+    transparent 290deg 327deg, rgba(255, 214, 0, 0.3) 327deg 335deg,
+    transparent 335deg 360deg
+  );
+  mix-blend-mode: screen;
+  transform: translate(-50%, -50%) rotate(0deg);
+  animation: disco-beams 4s linear infinite;
+}
+
+@keyframes disco-beams {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* 地板上跳動的彩色光點 */
+.disco-lights__spots {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle 42px at 18% 72%, rgba(255, 64, 129, 0.55), transparent),
+    radial-gradient(circle 42px at 72% 84%, rgba(64, 196, 255, 0.55), transparent),
+    radial-gradient(circle 36px at 46% 62%, rgba(255, 214, 0, 0.5), transparent),
+    radial-gradient(circle 36px at 88% 58%, rgba(105, 240, 174, 0.5), transparent);
+  mix-blend-mode: screen;
+  animation: disco-spots 1.6s steps(4) infinite alternate;
+}
+
+@keyframes disco-spots {
+  from { transform: translateX(-12%); }
+  to   { transform: translateX(12%); }
+}
+
+.party-scene__floor.is-disco .partygoer__sprite {
+  animation: goer-dance 0.8s steps(4) infinite;
+}
+
+.party-scene__floor.is-disco .party-deco--disco {
+  animation-duration: 0.4s;
+}
+
 /* ===== 迪斯可球：擺盪 + 亮片輪轉 + 光暈脈動 ===== */
 .party-deco--disco {
   animation: disco-glow 1.8s ease-in-out infinite;
@@ -1607,8 +1606,7 @@ body::after {
   .invite-card,
   .invite-dialog,
   .hero__invite-btn,
-  .calendar-link,
-  .role-card__inner {
+  .calendar-link {
     animation: none;
     transition: none;
   }
@@ -1616,6 +1614,18 @@ body::after {
   .hero__title::before,
   .hero__title::after {
     display: none;
+  }
+
+  /* 彩蛋仍會關燈上色，只是不轉、不跳 */
+  .disco-lights,
+  .disco-lights__spots,
+  .party-scene__floor.is-disco .partygoer__sprite {
+    animation: none;
+  }
+
+  .disco-lights__beams {
+    animation: none;
+    transform: translate(-50%, -50%);
   }
 
   .reveal {

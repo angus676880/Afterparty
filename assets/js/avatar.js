@@ -699,7 +699,13 @@
     ].sort(() => Math.random() - 0.5);
     DECO_POOL.forEach(deco => {
       if (!deco.always && Math.random() > 0.85) return;
-      const el = document.createElement('div');
+      /* 迪斯可球是彩蛋開關，用 button 才能被點擊與鍵盤操作 */
+      const el = document.createElement(deco.zone === 'ceiling' ? 'button' : 'div');
+      if (deco.zone === 'ceiling') {
+        el.type = 'button';
+        el.setAttribute('aria-label', '迪斯可球');
+        el.addEventListener('click', startDisco);
+      }
       el.className = `party-deco${deco.cls ? ` ${deco.cls}` : ''}`;
       el.innerHTML = deco.draw();
       el.style.width = `${deco.width}px`;
@@ -718,7 +724,8 @@
       } else {
         el.style.left = `${38 + Math.random() * 24}%`;
         el.style.top = '0';
-        el.style.zIndex = 2;
+        /* 比迪斯可燈光遮罩（z-index 2）高一層，關燈時球仍亮著 */
+        el.style.zIndex = 3;
         /* 以掛點置中，寬幅彩旗才不會超出右緣 */
         el.style.transform = 'translateX(-50%)';
       }
@@ -811,6 +818,28 @@
       el.classList.add('is-dancing');
     }
   });
+
+  /* ===== 迪斯可彩蛋：點迪斯可球 → 關燈、彩色光束掃射、全場跳舞 ===== */
+
+  const DISCO_MS = 10000;
+  const DANCE_EMOJIS = ['🕺', '💃', '🎶', '🪩', '✨'];
+  let discoTimer = 0;
+
+  function startDisco() {
+    if (floorEl.classList.contains('is-disco')) return;
+    const lights = document.createElement('div');
+    lights.className = 'disco-lights';
+    lights.setAttribute('aria-hidden', 'true');
+    lights.innerHTML = '<span class="disco-lights__beams"></span><span class="disco-lights__spots"></span>';
+    floorEl.appendChild(lights);
+    floorEl.classList.add('is-disco');
+    liveGuests.concat(coupleLives).forEach(g => showBubble(g.el, randomOf(DANCE_EMOJIS), DISCO_MS));
+    clearTimeout(discoTimer);
+    discoTimer = setTimeout(() => {
+      floorEl.classList.remove('is-disco');
+      lights.remove();
+    }, DISCO_MS);
+  }
 
   floorEl.addEventListener('animationend', e => {
     const el = e.target.closest('.partygoer');
