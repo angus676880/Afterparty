@@ -490,6 +490,18 @@ body {
   color: var(--color-text-muted);
 }
 
+/* 兩個連結並排，窄螢幕自動換行 */
+.venue-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-sm);
+  justify-content: center;
+}
+
+.invite-card .venue-links {
+  justify-content: flex-start;
+}
+
 .venue-map-link {
   display: inline-block;
   margin-top: 0.25rem;
