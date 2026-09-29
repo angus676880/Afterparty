@@ -24,6 +24,48 @@
 
   <main>
 
+    <!-- ===== 邀請函信封 ===== -->
+    <section class="invite reveal" aria-labelledby="invite-heading">
+      <h2 id="invite-heading" class="section-title">你的邀請函</h2>
+      <button
+        type="button"
+        id="invite-toggle"
+        class="invite__envelope"
+        aria-expanded="false"
+        aria-controls="invite-card"
+      >
+        <span class="invite__back" aria-hidden="true"></span>
+        <span class="invite__flap" aria-hidden="true"></span>
+        <span class="invite__seal" aria-hidden="true">💌</span>
+        <span class="invite__label">點我拆開邀請函</span>
+      </button>
+
+      <article id="invite-card" class="invite-card" aria-labelledby="invite-card-title" hidden>
+        <p class="invite-card__pre">親愛的朋友：</p>
+        <h3 id="invite-card-title" class="invite-card__title">誠摯邀請你參加 After Party</h3>
+        <dl class="invite-card__details">
+          <div class="invite-card__row">
+            <dt><span aria-hidden="true">📅</span> 日期</dt>
+            <dd>2026 - 10 - 25（日），隔天國定假日</dd>
+          </div>
+          <div class="invite-card__row">
+            <dt><span aria-hidden="true">🕖</span> 時間</dt>
+            <dd>晚上 10:00 開始</dd>
+          </div>
+          <div class="invite-card__row">
+            <dt><span aria-hidden="true">📍</span> 地點</dt>
+            <dd>台中市區待定</dd>
+          </div>
+        </dl>
+
+        <h4 class="invite-card__subtitle">誰會來</h4>
+        <p id="invite-count" class="invite-card__count" aria-live="polite"></p>
+        <ul id="invite-roster" class="invite-card__roster"></ul>
+
+        <a href="#rsvp-heading" class="invite-card__cta">我也要去，前往報名 →</a>
+      </article>
+    </section>
+
     <!-- ===== 活動資訊 ===== -->
     <section class="event-info reveal" aria-labelledby="event-heading">
       <h2 id="event-heading" class="section-title">活動資訊</h2>
@@ -156,5 +198,6 @@
   <script src="assets/js/main.js" defer></script>
   <script src="assets/js/effects.js" defer></script>
   <script src="assets/js/avatar.js" defer></script>
+  <script src="assets/js/invite.js" defer></script>
 </body>
 </html>

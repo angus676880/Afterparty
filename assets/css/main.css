@@ -194,6 +194,241 @@ body {
   color: var(--color-text);
 }
 
+/* ===== 邀請函信封 ===== */
+.invite {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: var(--space-lg) var(--space-sm) 0;
+  text-align: center;
+  --envelope-body: #2a1f4a;
+  --envelope-flap: #3d2a6b;
+  --paper: #fdf8ef;
+  --paper-ink: #2a2238;
+  --paper-muted: #6b5e80;
+}
+
+.invite__envelope {
+  position: relative;
+  display: block;
+  width: min(320px, 100%);
+  aspect-ratio: 3 / 2;
+  margin: 0 auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--envelope-body);
+  color: var(--color-text);
+  font-family: var(--font-base);
+  cursor: pointer;
+  perspective: 800px;
+  transition: transform var(--transition), box-shadow var(--transition), margin-top 0.6s ease;
+}
+
+.invite__envelope:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 36px rgba(224, 64, 251, 0.25);
+}
+
+.invite__envelope:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+/* 信封下半部的 V 形摺線，讓扁平色塊看起來像信封 */
+.invite__back {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(to top right, transparent calc(50% - 1px), var(--color-border) 50%, transparent calc(50% + 1px)) left bottom / 50% 60% no-repeat,
+    linear-gradient(to top left, transparent calc(50% - 1px), var(--color-border) 50%, transparent calc(50% + 1px)) right bottom / 50% 60% no-repeat;
+}
+
+.invite__flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 58%;
+  background: var(--envelope-flap);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  transition: transform 0.6s ease;
+}
+
+.invite__seal {
+  position: absolute;
+  top: 58%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.25rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 10px rgba(255, 64, 129, 0.6));
+  animation: seal-pulse 2.4s ease-in-out infinite;
+  transition: opacity var(--transition);
+}
+
+@keyframes seal-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%      { transform: translate(-50%, -50%) scale(1.12); }
+}
+
+.invite__label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--space-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-gold);
+}
+
+/* 翻開的封蓋會往上凸出（高度 = 信封寬 × 2/3 × 58%），預留空間避免蓋到標題 */
+.invite.is-open .invite__envelope {
+  margin-top: calc(min(320px, 100%) * 0.39);
+}
+
+.invite.is-open .invite__flap {
+  transform: rotateX(180deg);
+}
+
+.invite.is-open .invite__seal {
+  opacity: 0;
+}
+
+.invite-card {
+  position: relative;
+  margin-top: var(--space-sm);
+  padding: var(--space-md) var(--space-sm);
+  background: var(--paper);
+  color: var(--paper-ink);
+  border-radius: var(--radius-md);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+  text-align: center;
+  animation: invite-slide-out 0.6s ease both;
+}
+
+@media (min-width: 600px) {
+  .invite-card {
+    padding: var(--space-md);
+  }
+}
+
+@keyframes invite-slide-out {
+  from { opacity: 0; transform: translateY(-40px) scale(0.92); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.invite-card__pre {
+  color: var(--paper-muted);
+  font-size: 0.9rem;
+}
+
+.invite-card__title {
+  font-size: clamp(1.25rem, 4vw, 1.6rem);
+  font-weight: 800;
+  margin: 0.25rem 0 var(--space-sm);
+}
+
+.invite-card__details {
+  display: grid;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+  text-align: left;
+}
+
+.invite-card__row {
+  display: flex;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  background: rgba(123, 31, 162, 0.08);
+}
+
+.invite-card__row dt {
+  flex: 0 0 auto;
+  font-weight: 700;
+  color: #7b1fa2;
+}
+
+.invite-card__row dd {
+  font-weight: 600;
+}
+
+.invite-card__subtitle {
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.invite-card__count {
+  color: var(--paper-muted);
+  font-size: 0.85rem;
+  margin-bottom: var(--space-sm);
+}
+
+.invite-card__roster {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-sm) var(--space-xs);
+  padding: var(--space-sm) var(--space-xs);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+}
+
+.roster-item {
+  width: 64px;
+  text-align: center;
+}
+
+.roster-item__sprite svg {
+  display: block;
+  width: 36px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.roster-item--couple .roster-item__sprite svg {
+  width: 44px;
+}
+
+.roster-item__name {
+  display: block;
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+}
+
+.roster-item--couple .roster-item__name {
+  color: var(--color-gold);
+  font-weight: 600;
+}
+
+.invite-card__cta {
+  display: inline-block;
+  margin-top: var(--space-md);
+  padding: 0.6rem 1.4rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--color-accent), #7b1fa2);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform var(--transition);
+}
+
+.invite-card__cta:hover {
+  transform: translateY(-2px);
+}
+
+.invite-card__cta:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
 /* ===== RSVP ===== */
 .rsvp {
   max-width: 620px;
@@ -1004,7 +1239,12 @@ body::after {
   .party-deco--neon,
   .avatar-option__dot,
   .avatar-option__chip,
-  .btn-ghost {
+  .btn-ghost,
+  .invite__envelope,
+  .invite__flap,
+  .invite__seal,
+  .invite-card,
+  .invite-card__cta {
     animation: none;
     transition: none;
   }
