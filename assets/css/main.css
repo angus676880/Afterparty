@@ -477,6 +477,66 @@ body {
   color: #7b1fa2;
 }
 
+/* ===== 倒數計時 ===== */
+.hero__countdown {
+  margin-top: var(--space-sm);
+  color: var(--color-text);
+  font-size: clamp(0.95rem, 3vw, 1.1rem);
+  font-variant-numeric: tabular-nums;
+}
+
+.hero__countdown strong {
+  color: var(--color-gold);
+  font-size: 1.3em;
+}
+
+/* ===== 加入行事曆 ===== */
+.calendar-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-md);
+}
+
+.calendar-link {
+  padding: 0.5rem 1.1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color var(--transition), transform var(--transition);
+}
+
+.calendar-link:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.calendar-link:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.invite-card .calendar-links {
+  margin-top: 0;
+  margin-bottom: var(--space-md);
+}
+
+.invite-card .calendar-link {
+  border-color: #d9c9e6;
+  color: var(--paper-ink);
+}
+
+/* ===== 報名截止說明 ===== */
+.party-scene__closed {
+  text-align: center;
+  color: var(--color-text);
+  margin-bottom: var(--space-xs);
+}
+
 /* ===== RSVP ===== */
 .rsvp {
   max-width: 620px;
@@ -1293,7 +1353,8 @@ body::after {
   .invite__seal,
   .invite-card,
   .invite-dialog,
-  .hero__invite-btn {
+  .hero__invite-btn,
+  .calendar-link {
     animation: none;
     transition: none;
   }

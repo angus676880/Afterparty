@@ -723,7 +723,7 @@
 
     emptyEl = document.createElement('p');
     emptyEl.className = 'party-scene__empty';
-    emptyEl.textContent = '舞池還空著，快報名進場吧 🎈';
+    emptyEl.textContent = '賓客名單載入中⋯ 🎈';
     floorEl.appendChild(emptyEl);
 
     /* 隨機讓某人冒出聊天泡泡；進場後先快速冒一次，馬上有互動感 */
@@ -759,7 +759,7 @@
     emptyEl.hidden = seated.length > 0;
     countEl.textContent = seated.length
       ? `🎉 新人已就位，${seated.length} 位賓客到場同樂中`
-      : '新人已就位，等你第一個到場！';
+      : '新人已就位，賓客名單載入中⋯';
   }
 
   async function refreshRemote() {
