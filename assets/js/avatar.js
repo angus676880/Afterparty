@@ -739,17 +739,24 @@
 
     /* 隨機讓某人冒出聊天泡泡；進場後先快速冒一次，馬上有互動感 */
     if (!REDUCED_MOTION) {
+      /* 賓客閒聊：心願、台詞、表情符號三種混著出現；正在說話的人不會被打斷 */
+      const guestLine = g => {
+        const roll = Math.random();
+        if (g.wish && roll < 0.35) return { text: g.wish, ms: 4200 };
+        if (roll < 0.7) return { text: randomOf(GUEST_QUIPS), ms: 3000 };
+        return { text: randomOf(GUEST_EMOJIS), ms: 2400 };
+      };
       const popBubble = () => {
         const pool = liveGuests
-          .filter(g => !g.el.classList.contains('is-walking'))
-          .concat(coupleLives);
+          .concat(coupleLives)
+          .filter(g => !g.el.classList.contains('is-talking'));
         if (!pool.length) return;
         const pick = pool[Math.floor(Math.random() * pool.length)];
-        const useWish = pick.wish && Math.random() < 0.35;
-        showBubble(pick.el, useWish ? pick.wish : randomOf(pick.couple ? COUPLE_EMOJIS : GUEST_EMOJIS), useWish ? 4200 : 2400);
+        const { text, ms } = pick.couple ? { text: randomOf(COUPLE_EMOJIS), ms: 2400 } : guestLine(pick);
+        showBubble(pick.el, text, ms);
       };
       setTimeout(popBubble, 700);
-      setInterval(popBubble, 3600);
+      setInterval(popBubble, 1500);
     }
   }
 
