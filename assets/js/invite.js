@@ -66,15 +66,5 @@
 
   if (openBtn) openBtn.addEventListener('click', openDialog);
 
-  /* 只在第一次造訪自動跳出，之後改用 hero 的按鈕手動開；
-     localStorage 被停用（如無痕模式）時一律視為第一次 */
-  const SEEN_KEY = 'afterparty-invite-seen';
-  let seen = false;
-  try {
-    seen = localStorage.getItem(SEEN_KEY) === '1';
-    localStorage.setItem(SEEN_KEY, '1');
-  } catch {
-    /* 無法讀寫就照常彈出 */
-  }
-  if (!seen) openDialog();
+  openDialog();
 }());
