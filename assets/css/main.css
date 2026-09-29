@@ -446,6 +446,41 @@ body {
   }
 }
 
+/* 設備清單項目多，橫跨整列才放得下 */
+.info-card--wide {
+  grid-column: 1 / -1;
+}
+
+/* ===== 設備清單 ===== */
+.equipment-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+}
+
+.equipment-list li {
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: rgba(224, 64, 251, 0.08);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.invite-card .equipment-list {
+  justify-content: flex-start;
+  margin-top: 0;
+}
+
+.invite-card .equipment-list li {
+  border-color: #d9c9e6;
+  background: var(--paper);
+  font-size: 0.85rem;
+}
+
 /* ===== 場地地址 ===== */
 .venue-address {
   display: block;
