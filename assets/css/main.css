@@ -232,6 +232,21 @@ body {
   overscroll-behavior: contain;
 }
 
+/* Windows 等顯示實體捲動軸的瀏覽器會在信紙旁出現一條白軌；
+   隱藏外觀但保留滾輪與觸控捲動 */
+.invite-dialog {
+  scrollbar-width: none;
+}
+
+.invite-dialog::-webkit-scrollbar {
+  display: none;
+}
+
+/* 彈窗開著時鎖住背後的頁面，避免出現第二條捲動軸、也避免捲到背後內容 */
+html:has(.invite-dialog[open]) {
+  overflow: hidden;
+}
+
 .invite-dialog::backdrop {
   background: rgba(8, 6, 20, 0.82);
   backdrop-filter: blur(4px);
